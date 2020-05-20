@@ -1,0 +1,78 @@
+Huynh Minh Huan - 1612858
+
+
+Cau 1:
+S -> A
+A -> A + A | id
+id -> a | b | c
+
+a + b + c
+S -> A
+	C1: chọn A bên trái id
+	-> A + A 
+	-> A 
+	-> a + A
+	-> a + A + A
+	-> a + id + A 
+	-> a + b + A 
+	-> a + b + id 
+	-> a + b + c
+	
+	C2: chọn A bên trái A + A
+	-> A + A 
+	-> A + A + A 
+	-> id + A + A 
+	-> a + A + A 
+	-> a + id + A 
+	-> a + b + A 
+	-> a + b + id 
+	-> a + b + c 
+	
+
+Cau 3:
+S -> AaBb
+A -> Ab | b
+B -> aB | a
+
+a) baab
+S -> AaBb
+	-> baBb
+	-> baab (OK)
+	
+b) bbbab 
+S -> AaBb
+	-> AbaBb
+	-> AbbaBb
+	-> bbbaBb
+	-> bbbaab | bbbaBb (Error)
+
+c) bbaaaaa
+S -> AaBb
+	-> AbaBb
+	-> bbaBb
+	-> bbaaBb
+	-> bbaaaBb
+	-> bbaaaaBb
+	-> bbaaaaab (Error)
+	
+d) bbaab
+S -> AaBb
+	-> AbaBb
+	-> bbaBb 
+	-> bbaab (OK)
+
+Cau 5:
+
+1/ a = 2*(b-1) - 1 {a>0}
+	
+2/ b = (c+10)/3 {b>6}
+	(c+10)/3 > 6
+	c+10 > 18
+	c > 8
+3/ a = a+2*b-1 {a>1}
+	a+2*b-1>1
+	a > 2 - 2b
+4/ x = 2*y+x-1 (x>11)
+	2*y+x-1 > 11
+	x > 12 - 2*y
+
