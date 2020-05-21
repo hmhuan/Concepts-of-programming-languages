@@ -1,30 +1,41 @@
 // Define a grammar called SimpleCode
 grammar SC;
-scan: LITERAL+ | IDENTIFIER+ ;
+scan: INTLITERAL+ | CHARLITERAL+ | BOOLEANLITERAL+ | STRINGLITERAL+ | IDENTIFIER+;
 WS : [ \t\r\n]+ -> skip ;
 
 
 // Operator
 BIN_OPR: ARITH_OPR | REL_OPR | EQ_OPR | COND_OPR ;
-ARITH_OPR: '+' |'-' | '*' | '/' | '%' ;
-REL_OPR: '<' | '>' | '<=' | '>=' ;
-EQ_OPR: '==' | '!=' ;
-COND_OPR: '&&' | '||' ;
+fragment ARITH_OPR: '+' |'-' | '*' | '/' | '%' ;
+fragment REL_OPR: '<' | '>' | '<=' | '>=' ;
+fragment EQ_OPR: '==' | '!=' ;
+fragment COND_OPR: '&&' | '||' ;
 
 // Keywords
-PROGRAM: 'Program';
-IF: 'if' ;
-BOOLEAN: 'boolean' ;
-BREAK: 'break' ;
-CALL_OUT: 'callout' ;
-CLASS: 'class' ;
-CONTINUE: 'continue' ;
-ELSE: 'else' ;
-FOR: 'for' ;
-INT: 'int' ;
-RETURN: 'return' ;
-VOID: 'void' ;
-
+fragment PROGRAM: 'Program';
+fragment IF: 'if' ;
+fragment BOOLEAN: 'boolean' ;
+fragment BREAK: 'break' ;
+fragment CALL_OUT: 'callout' ;
+fragment CLASS: 'class' ;
+fragment CONTINUE: 'continue' ;
+fragment ELSE: 'else' ;
+fragment FOR: 'for' ;
+fragment INT: 'int' ;
+fragment RETURN: 'return' ;
+fragment VOID: 'void' ;
+KEYWORD: PROGRAM 
+        | IF+ 
+        | BOOLEAN+ 
+        | BREAK+ 
+        | CALL_OUT+ 
+        | CLASS+ 
+        | CONTINUE+ 
+        | ELSE+ 
+        | FOR+ 
+        | INT+ 
+        | RETURN+ 
+        | VOID+ ;
 TYPE: INT | BOOLEAN ;
 
 
@@ -50,21 +61,23 @@ fragment TRUE: 'true' ;
 fragment FALSE: 'false';
 
 fragment DIGIT: [0-9] ;
-DEC_DIGITS: DIGIT|[1-9]DIGIT* ;
-HEX_DIGITS: '0x'(DIGIT|[a-fA-F])+ ;
-fragment SIGN: [+-] ;
+fragment DEC_DIGITS: DIGIT|[1-9]DIGIT* ;
+fragment HEX_DIGITS: '0x'(DIGIT|[a-fA-F])+ ;
+fragment CHAR: [\u0020-\u0021\u0023-\u0026\u0028-\u005B\u005D-\u007E]
+                | '\\n' 
+                | '\\t'
+                | '\\\\' 
+                | '\\"' 
+                | '\\\'';
+fragment SIGN: [+-] ; 
 
-fragment CHARLITERAL: '\''[\u0020-\u007E]'\'';
-fragment ALPHA: [_a-zA-Z] ;
-INTLITERAL: DEC_DIGITS+ | HEX_DIGITS+ ;
+// LITERAL: INTLITERAL | CHARLITERAL | BOOLEANLITERAL | STRINGLITERAL ;
+CHARLITERAL: '\''CHAR'\'' ;
+INTLITERAL: DEC_DIGITS | HEX_DIGITS ;
 BOOLEANLITERAL: TRUE | FALSE ;
-STRINGLITERAL: '"' STR_CHAR* '"' 
-                {
-		            y = str(self.text)
-		            self.text = y[1:-1]
-                };
-STR_CHAR: ~[\b\t\n\f\r"'\\] | ESC_SEQ ;
+STRINGLITERAL: '"' STR_CHAR* '"' ;
+fragment STR_CHAR: ~[\b\t\n\f\r"'\\] | ESC_SEQ ;
 fragment ESC_SEQ: '\\' [btnfr"'\\] ;
-LITERAL: INTLITERAL | CHARLITERAL | BOOLEANLITERAL | STRINGLITERAL ;
 IDENTIFIER: ALPHA ALPHA_NUM* ;
-ALPHA_NUM: ALPHA | DIGIT ;
+fragment ALPHA: [_a-zA-Z] ;
+fragment ALPHA_NUM: ALPHA | DIGIT ;

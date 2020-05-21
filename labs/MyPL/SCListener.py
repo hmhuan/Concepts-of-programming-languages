@@ -17,5 +17,14 @@ class SCListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by SCParser#var_decl.
+    def enterVar_decl(self, ctx:SCParser.Var_declContext):
+        pass
+
+    # Exit a parse tree produced by SCParser#var_decl.
+    def exitVar_decl(self, ctx:SCParser.Var_declContext):
+        pass
+
+
 
 del SCParser
