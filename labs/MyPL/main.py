@@ -1,46 +1,32 @@
 import sys
+import os
 import antlr4 
 from SCLexer import SCLexer
 from SCParser import SCParser
 from SCListener import SCListener
-
+from LexerError import LexerErrorListener
 
 def scan(file):
-    stream = antlr4.FileStream('input/scanner/' + file)
+    fname = os.path.basename(file).split('.')[0]
+    fo = open('output/scanner/' + fname + '.out', 'w') 
+    stream = antlr4.FileStream(file)
     lexer = SCLexer(stream)
-
+    lexer.addErrorListener(LexerErrorListener(fo))
+    
     for token in lexer.getAllTokens():
-        line, symbol, text = token.line, '', token.text
+        line, symbol, text = token.line, '', token.text  
         if token.type >= lexer.CHARLITERAL:
             symbol =  lexer.symbolicNames[token.type]
-            print(line, symbol, text)
+            # print(line, symbol, text)
+            fo.write('%d %s %s\n' %(line, symbol, text))
         else:
-            print(line, text)
+            # print(line, text)
+            fo.write('%d %s\n' %(line, text))
+    fo.close()
 
 if __name__ == "__main__":
-    file = sys.argv[1]
-    scan(file)
+    option, file = int(sys.argv[1]), sys.argv[2]
+    if option == 0:
+        scan(sys.argv[2])
 
-    # text = 'int a, b , c;'
-    # stream = antlr4.InputStream(text)
-    # lexer = SCLexer(stream)
-    # tokens = antlr4.CommonTokenStream(lexer)
-    # parser = SCParser(tokens)
-    # tree = parser.var_decl()
-    
-    # option = -1
-    # filePath, output = '', ''
-    # try:
-    #     option = int(sys.argv[2])
-    #     filePath = sys.argv[4]
-    #     output = os.path.basename(filePath).split('.')[0] + '.out'
-    # except (IndexError, ValueError):
-    #     pass
-    
-    # if option == 0:
-    #     Scan()
-    #     output = './output/scanner/' + output
-    # elif option == 1:
-    #     Parse()
-    #     output = './output/parser/' + output
     pass

@@ -1,5 +1,10 @@
 // Define a grammar called SimpleCode
 grammar SC;
+
+@lexer::header {
+from LexerError import *
+}
+
 scan: INTLITERAL* | CHARLITERAL* | BOOLEANLITERAL* | STRINGLITERAL* | IDENTIFIER* ;
 // parse: CLASS PROGRAM LCB field_decl* method_decl* RCB ;
 
@@ -38,7 +43,6 @@ KEYWORD: PROGRAM|IF|BOOLEAN|BREAK|CALL_OUT|CLASS|CONTINUE|ELSE|FOR|INT|RETURN|VO
 TYPE: INT | BOOLEAN ;
 
 
-
 // comment
 LINE_COMMENT: '//' ~ [\r\n]* -> skip ;
 BLK_COMMENT: ('/*' .*? '*/') -> skip ;
@@ -61,17 +65,21 @@ fragment FALSE: 'false';
 
 fragment DIGIT: [0-9] ;
 fragment DEC_DIGITS: DIGIT|[1-9]DIGIT* ;
-fragment HEX_DIGITS: '0x'(DIGIT|[a-fA-F])+ ;
+fragment HEX_DIGITS: '0x'(DIGIT|[a-fA-F])*;
 fragment CHAR: [\u0020-\u0021\u0023-\u0026\u0028-\u005B\u005D-\u007E]|'\\n'|'\\t'|'\\\\' |'\\"' |'\\\'';
 fragment SIGN: [+-] ; 
 
-// LITERAL: INTLITERAL | CHARLITERAL | BOOLEANLITERAL | STRINGLITERAL ;
 CHARLITERAL: '\''CHAR'\'' ;
-INTLITERAL: (DEC_DIGITS | HEX_DIGITS);
+INTLITERAL: (DEC_DIGITS | HEX_DIGITS) {
+	y = str(self.text)
+	if y == '0x':
+		self.text = 'unexpected token: ' + self.text
+		self.type = 1
+};
 BOOLEANLITERAL: (TRUE | FALSE);
 STRINGLITERAL: '"' STR_CHAR* '"' ;
+IDENTIFIER: ALPHA ALPHA_NUM* ;
 fragment STR_CHAR: ~[\b\t\n\f\r"'\\] | ESC_SEQ ;
 fragment ESC_SEQ: '\\' [btnfr"'\\] ;
-IDENTIFIER: ALPHA ALPHA_NUM* ;
 fragment ALPHA: [_a-zA-Z] ;
 fragment ALPHA_NUM: ALPHA | DIGIT ;

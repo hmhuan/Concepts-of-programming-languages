@@ -1,0 +1,7 @@
+string2 line 2:0 token recognition error at: '"Aren''
+string2 line 2:20 token recognition error at: '?'
+string2 line 2:21 token recognition error at: '"\n'
+2 IDENTIFIER t
+2 IDENTIFIER you
+2 IDENTIFIER a
+2 IDENTIFIER string
